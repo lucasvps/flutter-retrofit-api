@@ -6,6 +6,19 @@ part of 'character_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+ApiResult _$ApiResultFromJson(Map<String, dynamic> json) {
+  return ApiResult(
+    results: (json['results'] as List)
+        ?.map((e) =>
+            e == null ? null : Character.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$ApiResultToJson(ApiResult instance) => <String, dynamic>{
+      'results': instance.results,
+    };
+
 Character _$CharacterFromJson(Map<String, dynamic> json) {
   return Character(
     id: json['id'] as int,
@@ -15,7 +28,6 @@ Character _$CharacterFromJson(Map<String, dynamic> json) {
     type: json['type'] as String,
     gender: json['gender'] as String,
     image: json['image'] as String,
-    episode: (json['episode'] as List)?.map((e) => e as String)?.toList(),
     url: json['url'] as String,
     created: json['created'] as String,
   );
@@ -29,7 +41,57 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'type': instance.type,
       'gender': instance.gender,
       'image': instance.image,
-      'episode': instance.episode,
       'url': instance.url,
       'created': instance.created,
     };
+
+// **************************************************************************
+// RetrofitGenerator
+// **************************************************************************
+
+class _CharacterApi implements CharacterApi {
+  _CharacterApi(this._dio, {this.baseUrl}) {
+    ArgumentError.checkNotNull(_dio, '_dio');
+  }
+
+  final Dio _dio;
+
+  String baseUrl;
+
+  @override
+  getAllCharacter() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final Response<Map<String, dynamic>> _result = await _dio.request(
+        'character/',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ApiResult.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  getSingleCharacter(id) async {
+    ArgumentError.checkNotNull(id, 'id');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final Response<Map<String, dynamic>> _result = await _dio.request(
+        'character/$id',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = Character.fromJson(_result.data);
+    return value;
+  }
+}

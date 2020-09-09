@@ -6,6 +6,18 @@ import 'package:retrofit_api_test/core/dio_config.dart';
 part 'character_model.g.dart';
 
 @JsonSerializable()
+class ApiResult {
+  final List<Character> results;
+
+  ApiResult({this.results});
+
+  factory ApiResult.fromJson(Map<String, dynamic> json) =>
+      _$ApiResultFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ApiResultToJson(this);
+}
+
+@JsonSerializable()
 class Character {
   final int id;
   final String name;
@@ -40,9 +52,9 @@ abstract class CharacterApi {
 
   @GET("character/")
   @Header(JSON_HEADER)
-  Future<List<Character>> getAllCharacter();
+  Future<ApiResult> getAllCharacter();
 
   @GET("character/{id}")
   @Header(JSON_HEADER)
-  Future<List<Character>> getSingleCharacter(@Path("id") dynamic id);
+  Future<Character> getSingleCharacter(@Path("id") dynamic id);
 }
