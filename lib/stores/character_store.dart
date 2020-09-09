@@ -18,8 +18,8 @@ abstract class _CharacterStoreBase with Store {
   Future<void> getAllCharacters() async {
     loadingChars = true;
     chars = ObservableList<Character>();
-    List<Character> aux = await _repository.getAllChar();
-    aux.forEach((element) {
+    var aux = await _repository.getAllChar();
+    aux.results.forEach((element) {
       chars.add(element);
     });
     loadingChars = false;

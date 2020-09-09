@@ -10,7 +10,7 @@ class CharacterRepository {
 
   CharacterRepository.internal();
 
-  Future<List<Character>> getAllChar() async => await _api.getAllCharacter();
+  Future<ApiResult> getAllChar() async => await _api.getAllCharacter();
 
   Future<Character> getSingleChar(String id) async =>
       await _api.getSingleCharacter(id);
