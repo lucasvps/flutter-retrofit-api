@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:retrofit_api_test/core/dio_config.dart';
 
 part 'character_model.g.dart';
 
@@ -12,7 +14,6 @@ class Character {
   final String type;
   final String gender;
   final String image;
-  final List<String> episode;
   final String url;
   final String created;
 
@@ -24,7 +25,6 @@ class Character {
       this.type,
       this.gender,
       this.image,
-      this.episode,
       this.url,
       this.created});
 
@@ -32,4 +32,17 @@ class Character {
       _$CharacterFromJson(json);
 
   Map<String, dynamic> toJson() => _$CharacterToJson(this);
+}
+
+@RestApi()
+abstract class CharacterApi {
+  factory CharacterApi(Dio dio, {String baseUrl}) = _CharacterApi;
+
+  @GET("character/")
+  @Header(JSON_HEADER)
+  Future<List<Character>> getAllCharacter();
+
+  @GET("character/{id}")
+  @Header(JSON_HEADER)
+  Future<List<Character>> getSingleCharacter(@Path("id") dynamic id);
 }
