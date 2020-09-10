@@ -6,10 +6,25 @@ import 'package:retrofit_api_test/core/dio_config.dart';
 part 'character_model.g.dart';
 
 @JsonSerializable()
+class Infos {
+  final int count;
+  final int pages;
+  final String next;
+  final String prev;
+
+  Infos(this.count, this.pages, this.next, this.prev);
+
+  factory Infos.fromJson(Map<String, dynamic> json) => _$InfosFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InfosToJson(this);
+}
+
+@JsonSerializable()
 class ApiResult {
   final List<Character> results;
+  final Infos info;
 
-  ApiResult({this.results});
+  ApiResult({this.info, this.results});
 
   factory ApiResult.fromJson(Map<String, dynamic> json) =>
       _$ApiResultFromJson(json);
@@ -57,4 +72,8 @@ abstract class CharacterApi {
   @GET("character/{id}")
   @Header(JSON_HEADER)
   Future<Character> getSingleCharacter(@Path("id") dynamic id);
+
+  @GET("character/?page={page}")
+  @Header(JSON_HEADER)
+  Future<ApiResult> nextPage(@Path("page") int page);
 }
