@@ -6,8 +6,27 @@ part of 'character_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+Infos _$InfosFromJson(Map<String, dynamic> json) {
+  return Infos(
+    json['count'] as int,
+    json['pages'] as int,
+    json['next'] as String,
+    json['prev'] as String,
+  );
+}
+
+Map<String, dynamic> _$InfosToJson(Infos instance) => <String, dynamic>{
+      'count': instance.count,
+      'pages': instance.pages,
+      'next': instance.next,
+      'prev': instance.prev,
+    };
+
 ApiResult _$ApiResultFromJson(Map<String, dynamic> json) {
   return ApiResult(
+    info: json['info'] == null
+        ? null
+        : Infos.fromJson(json['info'] as Map<String, dynamic>),
     results: (json['results'] as List)
         ?.map((e) =>
             e == null ? null : Character.fromJson(e as Map<String, dynamic>))
@@ -17,6 +36,7 @@ ApiResult _$ApiResultFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ApiResultToJson(ApiResult instance) => <String, dynamic>{
       'results': instance.results,
+      'info': instance.info,
     };
 
 Character _$CharacterFromJson(Map<String, dynamic> json) {
@@ -92,6 +112,25 @@ class _CharacterApi implements CharacterApi {
             baseUrl: baseUrl),
         data: _data);
     final value = Character.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  nextPage(page) async {
+    ArgumentError.checkNotNull(page, 'page');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final Response<Map<String, dynamic>> _result = await _dio.request(
+        'character/?page=$page',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ApiResult.fromJson(_result.data);
     return value;
   }
 }
