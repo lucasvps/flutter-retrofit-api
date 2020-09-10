@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 
-import 'authentication.dart';
-
 const JSON_HEADER = "Content-Type:application/json";
 
 class DioConfig {
@@ -12,7 +10,7 @@ class DioConfig {
   DioConfig.internal();
 
   Dio _dio;
-  final String _baseUrl = BASE_URL;
+  final String _baseUrl = "https://rickandmortyapi.com/api/";
 
   get dio {
     BaseOptions options = new BaseOptions(
