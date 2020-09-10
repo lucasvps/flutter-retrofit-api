@@ -14,4 +14,6 @@ class CharacterRepository {
 
   Future<Character> getSingleChar(String id) async =>
       await _api.getSingleCharacter(id);
+
+  Future<ApiResult> nextPage(int page) async => await _api.nextPage(page);
 }
